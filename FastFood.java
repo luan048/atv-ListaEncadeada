@@ -1,13 +1,32 @@
+/* Uso de lista ligada/encadeada sem cabeça, pois o primeiro elemento
+ * já contém um dado, e nesse caso, com inserção no final, já que está
+ * sempre percorendo todos os elementos da lista para realizar operações
+*/
+
 class Produto {
     String produto;
     int quantidade;
+    String status;
 
     Produto proximo;
 
     public Produto(String produto, int quantidade) {
         this.produto = produto;
         this.quantidade = quantidade;
+        this.status = "Na fila de pedidos"; //Status inicial de todos os novos produtos
         this.proximo = null;
+    }
+
+    public void produzir() {
+        status = "Em produção...";
+    }
+
+    public void entregar() {
+        status = "Saiu para entrega!";
+    }
+
+    public void exibirStatus() {
+        System.out.println("Status do pedido de " + quantidade + " " + produto + ": " + status);
     }
 }
 
@@ -47,6 +66,41 @@ class Pedidos {
             atual = atual.proximo;
         }
     }
+
+    public void iniciarProducao(String produto) { // Método para colocar o status de iniciado no produto
+        Produto atual = inicio;
+        while(atual != null) {
+            if(atual.produto.equals(produto)) { // Compara o valor da instância com o que foi criado e está na lista inicialmente
+                atual.produzir();
+                System.out.println("Produção do produto: " + produto + " iniciado");
+                return;
+            }
+            atual = atual.proximo;
+        }
+        System.out.println("Produto " + produto + " não encontrado nos pedidos...");
+    }
+
+    public void entregarProduto(String produto) { // Método para status de entrega
+        Produto atual = inicio;
+        while (atual != null) {
+            if(atual.produto.equals(produto)) {
+                atual.entregar();
+                System.out.println("O produto" + produto + " saiu para entrega");
+            }
+            atual = atual.proximo;
+        }
+    }
+
+    public void statusProduto(String produto) { // Método para listar o status
+        Produto atual = inicio;
+        while (atual != null) {
+            if(atual.produto.equals(produto)) {
+                System.out.println(produto + " está em produção");
+                atual.exibirStatus();
+            }
+            atual = atual.proximo;
+        }
+    }
 }
 
 public class FastFood {
@@ -56,10 +110,10 @@ public class FastFood {
         pedidos.criarPedidos("Hamburguer", 2);
         pedidos.criarPedidos("Pizza", 3);
         pedidos.criarPedidos("X-burguer", 5);
-
-        pedidos.listarPedidos();
+        System.out.println("--------------------------------------------");
+        pedidos.iniciarProducao("Pizza");
+        pedidos.statusProduto("Pizza");
+        pedidos.entregarProduto("Pizza");
+        pedidos.statusProduto("Pizza");
     }
 }
-
-
-// Falta adicionar uma lista para armazenar status dos PRODUTOS EM PRODUÇÃO e PRODUTOS EM ENTREGA
